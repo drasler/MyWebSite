@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026年度個人KPI規劃</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    /* 容器和佈局 */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .grid {
+      display: grid;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .gap-4 {
+      gap: 16px;
+    }
+
+    .gap-6 {
+      gap: 24px;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .items-start {
+      align-items: flex-start;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .space-y-6 > * + * {
+      margin-top: 24px;
+    }
+
+    /* 導航欄 */
+    .navbar {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #334155;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .navbar-content {
+      padding: 16px 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .logo p {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* 標籤按鈕 */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tab-button {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+
+    .tab-button.active {
+      background: #06b6d4;
+      color: white;
+      box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.3);
+    }
+
+    .tab-button:not(.active) {
+      background: #1e293b;
+      color: #94a3b8;
+    }
+
+    .tab-button:not(.active):hover {
+      background: #334155;
+      color: white;
+    }
+
+    /* 主內容區 */
+    .main-content {
+      padding: 32px 24px;
+    }
+
+    /* 統計卡片 */
+    .stat-card {
+      padding: 24px;
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .stat-card.cyan {
+      background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    }
+
+    .stat-card.emerald {
+      background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+    }
+
+    .stat-card.violet {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* KPI卡片 */
+    .kpi-card {
+      padding: 32px;
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s;
+    }
+
+    .kpi-card:hover {
+      transform: scale(1.02);
+    }
+
+    .kpi-card.emerald {
+      background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+    }
+
+    .kpi-card.amber {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    }
+
+    .kpi-card.violet {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    }
+
+    .kpi-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .kpi-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .kpi-icon {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .kpi-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .kpi-weight {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .expand-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    .expand-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .kpi-items {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+      animation: fadeIn 0.5s;
+    }
+
+    .kpi-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      padding: 16px;
+      border-radius: 12px;
+      transition: background 0.3s;
+      margin-bottom: 12px;
+    }
+
+    .kpi-item:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .item-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .priority-badge {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+    }
+
+    .priority-p1 {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    .priority-p2 {
+      background: rgba(245, 158, 11, 0.3);
+    }
+
+    .item-target {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .item-period {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    .indicator-section {
+      margin-bottom: 16px;
+      margin-top: 8px;
+    }
+
+    .indicator-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .indicator-badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .indicator-badge.quantitative {
+      background: rgba(14, 165, 233, 0.3);
+      color: #ffffff;
+    }
+
+    .indicator-badge.qualitative {
+      background: rgba(6, 182, 212, 0.3);
+      color: #ffffff;
+    }
+
+    .indicator-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .indicator-item {
+      padding: 10px 0;
+      padding-left: 20px;
+      position: relative;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .indicator-item::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: bold;
+    }
+
+    /* 甘特圖 */
+    .gantt-container {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .gantt-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gantt-chart {
+      overflow-x: auto;
+    }
+
+    .gantt-content {
+      min-width: 1000px;
+    }
+
+    .month-headers {
+      display: flex;
+      margin-bottom: 16px;
+    }
+
+    .task-label-space {
+      width: 192px;
+      flex-shrink: 0;
+    }
+
+    .months {
+      flex: 1;
+      display: flex;
+    }
+
+    .month {
+      flex: 1;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: #94a3b8;
+      border-left: 1px solid #475569;
+    }
+
+    .gantt-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .gantt-row:hover .task-name {
+      color: #06b6d4;
+    }
+
+    .task-info {
+      width: 192px;
+      flex-shrink: 0;
+      padding-right: 16px;
+    }
+
+    .task-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: white;
+      transition: color 0.3s;
+    }
+
+    .task-kpi {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .task-kpi.kpi1 {
+      color: #34d399;
+    }
+
+    .task-kpi.kpi2 {
+      color: #fbbf24;
+    }
+
+    .task-kpi.kpi3 {
+      color: #a78bfa;
+    }
+
+    .timeline {
+      flex: 1;
+      position: relative;
+      height: 40px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .timeline-grid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+    }
+
+    .timeline-cell {
+      flex: 1;
+      border-left: 1px solid rgba(71, 85, 105, 0.5);
+    }
+
+    .task-bar {
+      position: absolute;
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .gantt-row:hover .task-bar {
+      transform: scale(1.05);
+    }
+
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #475569;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .legend-color.emerald {
+      background: #10b981;
+    }
+
+    .legend-color.amber {
+      background: #f59e0b;
+    }
+
+    .legend-color.violet {
+      background: #8b5cf6;
+    }
+
+    .legend-label {
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    /* 季度卡片 */
+    .quarter-card {
+      padding: 24px;
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .quarter-card.blue {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    }
+
+    .quarter-card.emerald {
+      background: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+    }
+
+    .quarter-card.amber {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    }
+
+    .quarter-card.violet {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+    }
+
+    .quarter-name {
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .quarter-months {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 12px;
+    }
+
+    .quarter-focus {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* 追蹤表格 */
+    .tracking-container {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .tracking-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tracking-section {
+      margin-bottom: 32px;
+    }
+
+    .tracking-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      background: #334155;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .tracking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tracking-table thead tr {
+      border-bottom: 1px solid #475569;
+    }
+
+    .tracking-table th {
+      padding: 12px 16px;
+      text-align: left;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .tracking-table th.center {
+      text-align: center;
+    }
+
+    .tracking-table tbody tr {
+      border-bottom: 1px solid #334155;
+      transition: background 0.3s;
+    }
+
+    .tracking-table tbody tr:hover {
+      background: rgba(51, 65, 85, 0.5);
+    }
+
+    .tracking-table td {
+      padding: 12px 16px;
+      color: #cbd5e1;
+    }
+
+    .tracking-table td.center {
+      text-align: center;
+    }
+
+    .tracking-input {
+      width: 80px;
+      background: #334155;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .tracking-input:focus {
+      outline: 2px solid #06b6d4;
+    }
+
+    .progress-text {
+      font-weight: 600;
+    }
+
+    .progress-text.high {
+      color: #34d399;
+    }
+
+    .progress-text.medium {
+      color: #fbbf24;
+    }
+
+    .progress-text.low {
+      color: #f87171;
+    }
+
+    .progress-text.none {
+      color: #64748b;
+    }
+
+    /* 總體進度 */
+    .overall-progress {
+      margin-top: 32px;
+      padding: 24px;
+      background: #334155;
+      border-radius: 12px;
+    }
+
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .progress-label {
+      color: #cbd5e1;
+      font-weight: 500;
+      font-size: 18px;
+    }
+
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-bar-container {
+      width: 192px;
+      height: 12px;
+      background: #475569;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #06b6d4 0%, #10b981 50%, #8b5cf6 100%);
+      border-radius: 9999px;
+      transition: width 0.5s;
+    }
+
+    .progress-value {
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* 頁尾 */
+    .footer {
+      padding: 32px 24px;
+      margin-top: 48px;
+      border-top: 1px solid #334155;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    /* SVG圖標 */
+    .icon {
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .icon.lg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .icon.sm {
+      width: 18px;
+      height: 18px;
+    }
+
+    .icon.cyan {
+      color: #06b6d4;
+    }
+
+    /* 動畫 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* 響應式 */
+    @media (max-width: 1024px) {
+      .grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .grid-cols-3,
+      .grid-cols-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+
+      .tabs {
+        flex-direction: column;
+      }
+
+      .tab-button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .navbar-content {
+        padding: 12px 16px;
+      }
+
+      .logo h1 {
+        font-size: 20px;
+      }
+
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .gantt-chart {
+        overflow-x: scroll;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // SVG圖標組件
+    const Icon = ({ type, className = '' }) => {
+      const icons = {
+        target: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+        calendar: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+        trending: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+        database: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>,
+        zap: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+        book: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
+        chevronDown: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>,
+        chevronUp: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>,
+        alert: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+        check: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>,
+        circle: <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>,
+      };
+      return icons[type] || null;
+    };
+
+    const KPIDashboard = () => {
+      const [activeTab, setActiveTab] = useState('overview');
+      const [expandedKPI, setExpandedKPI] = useState(null);
+      const [trackingInputs, setTrackingInputs] = useState({});
+
+      // 甘特圖數據
+      const ganttData = [
+        { task: 'Q1痛點決策優化', start: 1, duration: 4, kpi: 'kpi1', color: '#10b981' },
+        { task: 'Oracle查詢優化', start: 5, duration: 4, kpi: 'kpi1', color: '#10b981' },
+        { task: 'Read-Replica協助', start: 7, duration: 3, kpi: 'kpi1', color: '#34d399' },
+        { task: '技術債務盤點', start: 9, duration: 3, kpi: 'kpi1', color: '#10b981' },
+        { task: 'Code Review機制', start: 10, duration: 3, kpi: 'kpi1', color: '#10b981' },
+        { task: 'AI工具評估', start: 1, duration: 4, kpi: 'kpi2', color: '#f59e0b' },
+        { task: '開發效率提升', start: 1, duration: 12, kpi: 'kpi2', color: '#fbbf24' },
+        { task: 'Log分析POC', start: 7, duration: 6, kpi: 'kpi2', color: '#f59e0b' },
+        { task: '知識庫建立', start: 1, duration: 6, kpi: 'kpi3', color: '#8b5cf6' },
+        { task: 'RAG系統研究', start: 1, duration: 12, kpi: 'kpi3', color: '#a78bfa' },
+        { task: '團隊分享', start: 1, duration: 12, kpi: 'kpi3', color: '#8b5cf6' },
+      ];
+
+      // KPI數據
+      const kpiData = [
+        {
+          id: 1,
+          title: 'MES核心優化',
+          weight: '40%',
+          icon: 'database',
+          colorClass: 'emerald',
+          items: [
+            { name: 'Q1痛點決策優化', target: '識別10個痛點、完成3個方案', period: 'Q1-Q2', priority: 'P1' },
+            { name: 'Oracle查詢優化', target: '優化≥15個查詢、效能提升≥30%', period: 'Q2-Q3', priority: 'P1' },
+            { name: 'Read-Replica協助', target: '1份建議文檔、3次測試驗證', period: 'Q2-Q3', priority: 'P2' },
+            { name: '技術債務盤點改善', target: '完成清單、重構≥5000行', period: 'Q3-Q4', priority: 'P1' },
+          ],
+          quantitative: [
+            'API平均回應時間(ART) < 500ms (P95)；Oracle Lock Wait Time 減少 50%',
+            '架構健康度：單元測試覆蓋率提升至 60% 以上；Code Smell Critical Issues 減少 40%'
+          ],
+          qualitative: [
+            '開發體驗(DX)：代碼易讀易懂，修改影響範圍小',
+            '使用者體驗流暢度顯著提升'
+          ]
+        },
+        {
+          id: 2,
+          title: 'AI輔助工具導入',
+          weight: '35%',
+          icon: 'zap',
+          colorClass: 'amber',
+          items: [
+            { name: 'AI開發工具評估導入', target: '評估≥3個工具、使用率≥80%', period: 'Q2-Q3', priority: 'P1' },
+            { name: '個人開發效率提升', target: '效率提升≥20%、累積30+案例', period: 'Q2-Q4', priority: 'P1' },
+            { name: 'Log分析POC', target: '完成1個POC、準確率≥75%', period: 'Q3-Q4', priority: 'P2' },
+          ],
+          quantitative: [
+            '平均修復時間(MTTR)降低 30%',
+            '新進IT人員效率[透過AI助手提升效率] > 80%',
+            '程式開發效率提升(透過DI/測試)'
+          ],
+          qualitative: [
+            'IT團隊轉型為「AI輔助」為重心',
+            '新進IT人員透過AI助手快速上手'
+          ]
+        },
+        {
+          id: 3,
+          title: '知識管理與分享',
+          weight: '25%',
+          icon: 'book',
+          colorClass: 'violet',
+          items: [
+            { name: '個人知識庫建立', target: '≥20篇文檔、≥30個問題記錄', period: 'Q1-Q2', priority: 'P1' },
+            { name: 'RAG系統研究', target: '1份調研、1個Demo、1次分享', period: 'Q2-Q3', priority: 'P2' },
+            { name: '團隊知識分享', target: '≥6次分享、≥10篇文檔', period: '全年', priority: 'P1' },
+          ],
+          quantitative: [
+            '知識節點覆蓋率 100% 核心流程',
+            '透明關聯查詢匯圖通度 80%'
+          ],
+          qualitative: [
+            '成功將委派員工的隱性知識轉化為系統可推薦的顯性知識',
+            '提供視覺化的品質溯源與流程工具'
+          ]
+        }
+      ];
+
+      // 月度追蹤數據
+      const trackingData = [
+        { kpi: 'KPI1: MES核心優化', items: [
+          { id: 'kpi1-1', name: 'Q1痛點決策優化完成度', target: 100 },
+          { id: 'kpi1-2', name: 'Oracle查詢優化數量', target: 15 },
+          { id: 'kpi1-3', name: 'Read-Replica協助完成度', target: 100 },
+          { id: 'kpi1-4', name: '技術債務改善完成度', target: 100 },
+        ]},
+        { kpi: 'KPI2: AI工具導入', items: [
+          { id: 'kpi2-1', name: 'AI工具導入完成度', target: 100 },
+          { id: 'kpi2-2', name: '個人開發效率提升率', target: 20 },
+          { id: 'kpi2-3', name: 'Log分析POC完成度', target: 100 },
+        ]},
+        { kpi: 'KPI3: 知識管理', items: [
+          { id: 'kpi3-1', name: '個人知識庫完成度', target: 100 },
+          { id: 'kpi3-2', name: 'RAG研究完成度', target: 100 },
+          { id: 'kpi3-3', name: '團隊知識分享次數', target: 6 },
+        ]},
+      ];
+
+      const handleInputChange = (id, quarter, value) => {
+        setTrackingInputs(prev => ({
+          ...prev,
+          [`${id}-${quarter}`]: parseInt(value) || 0
+        }));
+      };
+
+      const calculateProgress = (id, target) => {
+        const q1 = trackingInputs[`${id}-q1`] || 0;
+        const q2 = trackingInputs[`${id}-q2`] || 0;
+        const q3 = trackingInputs[`${id}-q3`] || 0;
+        const q4 = trackingInputs[`${id}-q4`] || 0;
+        const avg = (q1 + q2 + q3 + q4) / 4;
+        return Math.round((avg / target) * 100);
+      };
+
+      const getStatusIcon = (progress) => {
+        if (progress >= 90) return <Icon type="check" className="icon sm" style={{color: '#10b981'}} />;
+        if (progress >= 70) return <Icon type="alert" className="icon sm" style={{color: '#f59e0b'}} />;
+        if (progress > 0) return <Icon type="circle" className="icon sm" style={{color: '#ef4444'}} />;
+        return <Icon type="circle" className="icon sm" style={{color: '#64748b'}} />;
+      };
+
+      const calculateOverallProgress = () => {
+        let totalProgress = 0;
+        let itemCount = 0;
+        
+        trackingData.forEach(kpiGroup => {
+          kpiGroup.items.forEach(item => {
+            const progress = calculateProgress(item.id, item.target);
+            if (progress > 0) {
+              totalProgress += progress;
+              itemCount++;
+            }
+          });
+        });
+        
+        return itemCount > 0 ? Math.round(totalProgress / itemCount) : 0;
+      };
+
+      // 甘特圖組件
+      const GanttChart = () => {
+        const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        
+        return (
+          <div className="gantt-container">
+            <h3 className="gantt-title">
+              <Icon type="calendar" className="icon lg cyan" />
+              2026年度執行甘特圖
+            </h3>
+            
+            <div className="gantt-chart">
+              <div className="gantt-content">
+                <div className="month-headers">
+                  <div className="task-label-space"></div>
+                  <div className="months">
+                    {months.map((month, i) => (
+                      <div key={i} className="month">{month}</div>
+                    ))}
+                  </div>
+                </div>
+
+                {ganttData.map((item, idx) => (
+                  <div key={idx} className="gantt-row">
+                    <div className="task-info">
+                      <div className="task-name">{item.task}</div>
+                      <div className={`task-kpi ${item.kpi}`}>
+                        {item.kpi === 'kpi1' ? 'KPI1' : item.kpi === 'kpi2' ? 'KPI2' : 'KPI3'}
+                      </div>
+                    </div>
+                    
+                    <div className="timeline">
+                      <div className="timeline-grid">
+                        {[...Array(12)].map((_, i) => (
+                          <div key={i} className="timeline-cell"></div>
+                        ))}
+                      </div>
+                      
+                      <div
+                        className="task-bar"
+                        style={{
+                          left: `${((item.start - 1) / 12) * 100}%`,
+                          width: `${(item.duration / 12) * 100}%`,
+                          background: `linear-gradient(135deg, ${item.color} 0%, ${item.color}dd 100%)`,
+                        }}
+                      >
+                        <span style={{opacity: 0.9}}>{item.duration}個月</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="legend">
+              <div className="legend-item">
+                <div className="legend-color emerald"></div>
+                <span className="legend-label">MES核心優化</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color amber"></div>
+                <span className="legend-label">AI工具導入</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color violet"></div>
+                <span className="legend-label">知識管理</span>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // KPI卡片組件
+      const KPICard = ({ kpi }) => {
+        const isExpanded = expandedKPI === kpi.id;
+
+        return (
+          <div className={`kpi-card ${kpi.colorClass}`}>
+            <div className="kpi-header">
+              <div className="kpi-info">
+                <div className="kpi-icon">
+                  <Icon type={kpi.icon} className="icon lg" />
+                </div>
+                <div>
+                  <h3 className="kpi-title">{kpi.title}</h3>
+                  <div className="kpi-weight">權重: {kpi.weight}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setExpandedKPI(isExpanded ? null : kpi.id)}
+                className="expand-button"
+              >
+                <Icon type={isExpanded ? 'chevronUp' : 'chevronDown'} className="icon" />
+              </button>
+            </div>
+
+            {isExpanded && (
+              <div className="kpi-items">
+                {/* 原本的工作項目 */}
+                <div style={{marginBottom: '24px'}}>
+                  {kpi.items.map((item, idx) => (
+                    <div key={idx} className="kpi-item">
+                      <div className="item-header">
+                        <h4 className="item-name">{item.name}</h4>
+                        <span className={`priority-badge priority-${item.priority.toLowerCase()}`}>
+                          {item.priority}
+                        </span>
+                      </div>
+                      <div className="item-target">目標: {item.target}</div>
+                      <div className="item-period">期間: {item.period}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 量化與質化指標 */}
+                <div className="indicator-section">
+                  <div className="indicator-badge quantitative">量化指標</div>
+                  <ul className="indicator-list">
+                    {kpi.quantitative.map((item, idx) => (
+                      <li key={idx} className="indicator-item">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="indicator-section">
+                  <div className="indicator-badge qualitative">質化指標</div>
+                  <ul className="indicator-list">
+                    {kpi.qualitative.map((item, idx) => (
+                      <li key={idx} className="indicator-item">{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      return (
+        <div>
+          {/* 導航欄 */}
+          <nav className="navbar">
+            <div className="container navbar-content">
+              <div className="logo">
+                <Icon type="target" className="icon lg cyan" />
+                <div>
+                  <h1>2026年度個人KPI規劃</h1>
+                  <p>績效指標追蹤與管理系統</p>
+                </div>
+              </div>
+
+              <div className="tabs">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+                >
+                  <Icon type="target" className="icon sm" />
+                  總覽
+                </button>
+                <button
+                  onClick={() => setActiveTab('gantt')}
+                  className={`tab-button ${activeTab === 'gantt' ? 'active' : ''}`}
+                >
+                  <Icon type="calendar" className="icon sm" />
+                  甘特圖
+                </button>
+                <button
+                  onClick={() => setActiveTab('tracking')}
+                  className={`tab-button ${activeTab === 'tracking' ? 'active' : ''}`}
+                >
+                  <Icon type="trending" className="icon sm" />
+                  月度追蹤
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          {/* 主內容 */}
+          <main className="container main-content">
+            {activeTab === 'overview' && (
+              <div className="space-y-6 animate-fadeIn">
+                {/* 統計卡片 */}
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="stat-card cyan">
+                    <div className="stat-value">3</div>
+                    <div className="stat-label">主要KPI項目</div>
+                  </div>
+                  <div className="stat-card emerald">
+                    <div className="stat-value">10</div>
+                    <div className="stat-label">細分工作項目</div>
+                  </div>
+                  <div className="stat-card violet">
+                    <div className="stat-value">12</div>
+                    <div className="stat-label">執行月份</div>
+                  </div>
+                </div>
+
+                {/* KPI卡片 */}
+                <div className="grid grid-cols-1 gap-6">
+                  {kpiData.map(kpi => (
+                    <KPICard key={kpi.id} kpi={kpi} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'gantt' && (
+              <div className="animate-fadeIn">
+                <GanttChart />
+                
+                {/* 季度卡片 */}
+                <div className="grid grid-cols-4 gap-6" style={{marginTop: '32px'}}>
+                  <div className="quarter-card blue">
+                    <div className="quarter-name">Q1</div>
+                    <div className="quarter-months">1-3月</div>
+                    <div className="quarter-focus">Q1痛點優化 & 知識庫建立</div>
+                  </div>
+                  <div className="quarter-card emerald">
+                    <div className="quarter-name">Q2</div>
+                    <div className="quarter-months">4-6月</div>
+                    <div className="quarter-focus">Oracle優化 & AI工具導入</div>
+                  </div>
+                  <div className="quarter-card amber">
+                    <div className="quarter-name">Q3</div>
+                    <div className="quarter-months">7-9月</div>
+                    <div className="quarter-focus">技術債務 & AI深化</div>
+                  </div>
+                  <div className="quarter-card violet">
+                    <div className="quarter-name">Q4</div>
+                    <div className="quarter-months">10-12月</div>
+                    <div className="quarter-focus">Code Review & 總結</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'tracking' && (
+              <div className="animate-fadeIn">
+                <div className="tracking-container">
+                  <h3 className="tracking-title">
+                    <Icon type="trending" className="icon lg cyan" />
+                    月度追蹤表
+                  </h3>
+
+                  {trackingData.map((kpiGroup, idx) => (
+                    <div key={idx} className="tracking-section">
+                      <h4 className="section-title">{kpiGroup.kpi}</h4>
+                      
+                      <table className="tracking-table">
+                        <thead>
+                          <tr>
+                            <th>指標</th>
+                            <th className="center">目標</th>
+                            <th className="center">Q1</th>
+                            <th className="center">Q2</th>
+                            <th className="center">Q3</th>
+                            <th className="center">Q4</th>
+                            <th className="center">達成率</th>
+                            <th className="center">狀態</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {kpiGroup.items.map(item => {
+                            const progress = calculateProgress(item.id, item.target);
+                            const progressClass = progress >= 90 ? 'high' : progress >= 70 ? 'medium' : progress > 0 ? 'low' : 'none';
+                            
+                            return (
+                              <tr key={item.id}>
+                                <td>{item.name}</td>
+                                <td className="center">{item.target}</td>
+                                <td className="center">
+                                  <input
+                                    type="number"
+                                    className="tracking-input"
+                                    defaultValue={0}
+                                    min="0"
+                                    max={item.target}
+                                    onChange={(e) => handleInputChange(item.id, 'q1', e.target.value)}
+                                  />
+                                </td>
+                                <td className="center">
+                                  <input
+                                    type="number"
+                                    className="tracking-input"
+                                    defaultValue={0}
+                                    min="0"
+                                    max={item.target}
+                                    onChange={(e) => handleInputChange(item.id, 'q2', e.target.value)}
+                                  />
+                                </td>
+                                <td className="center">
+                                  <input
+                                    type="number"
+                                    className="tracking-input"
+                                    defaultValue={0}
+                                    min="0"
+                                    max={item.target}
+                                    onChange={(e) => handleInputChange(item.id, 'q3', e.target.value)}
+                                  />
+                                </td>
+                                <td className="center">
+                                  <input
+                                    type="number"
+                                    className="tracking-input"
+                                    defaultValue={0}
+                                    min="0"
+                                    max={item.target}
+                                    onChange={(e) => handleInputChange(item.id, 'q4', e.target.value)}
+                                  />
+                                </td>
+                                <td className="center">
+                                  <span className={`progress-text ${progressClass}`}>
+                                    {progress}%
+                                  </span>
+                                </td>
+                                <td className="center">
+                                  {getStatusIcon(progress)}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+
+                  <div className="overall-progress">
+                    <div className="progress-header">
+                      <span className="progress-label">總體達成率</span>
+                      <div className="progress-info">
+                        <div className="progress-bar-container">
+                          <div 
+                            className="progress-bar" 
+                            style={{ width: `${calculateOverallProgress()}%` }}
+                          ></div>
+                        </div>
+                        <span className="progress-value">{calculateOverallProgress()}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* 頁尾 */}
+          <footer className="container footer">
+            <p>2026年度個人KPI規劃 • 持續追求卓越與成長</p>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<KPIDashboard />, document.getElementById('root'));
+  </script>
+</body>
+</html>
